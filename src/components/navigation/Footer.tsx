@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { WineIcon } from '../icons/WineIcon';
 import { Facebook, Instagram, Twitter, Linkedin, CreditCard, Smartphone } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -11,8 +10,11 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="flex items-center mb-4">
-              <WineIcon className="text-white h-6 w-6 mr-2" />
-              <h3 className="text-l font-bold">DDS-CI DISTRIBUTION</h3>
+              <img 
+                src="/lovable-uploads/ee41d353-203c-425f-9955-90c80b882de5.png" 
+                alt="DDS-CI DISTRIBUTION Logo" 
+                className="h-12 mr-2" 
+              />
             </div>
             <p className="text-gray-400 mb-4">
               Votre destination premium pour les vins, liqueurs, boissons et sucreries de qualité.

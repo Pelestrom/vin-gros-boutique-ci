@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, Star } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ShoppingCart, Search } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 
 const Catalog = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [filters, setFilters] = useState({
     vins: true,
@@ -21,14 +23,63 @@ const Catalog = () => {
     stockLimite: false
   });
 
+  // Parse query parameters
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchParam = params.get('search');
+    const categoryParam = params.get('category');
+    
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    }
+    
+    if (categoryParam) {
+      // Reset all category filters
+      const newFilters = {
+        vins: false,
+        liqueurs: false,
+        boissons: false,
+        sucreries: false,
+        bieres: false,
+        nouveautes: filters.nouveautes,
+        promotions: filters.promotions,
+        stockLimite: filters.stockLimite
+      };
+      
+      // Set the selected category
+      switch (categoryParam.toLowerCase()) {
+        case 'vins':
+          newFilters.vins = true;
+          break;
+        case 'liqueurs':
+          newFilters.liqueurs = true;
+          break;
+        case 'boissons':
+          newFilters.boissons = true;
+          break;
+        case 'sucreries':
+          newFilters.sucreries = true;
+          break;
+        case 'bières':
+          newFilters.bieres = true;
+          break;
+        case 'eaux minérales':
+          newFilters.boissons = true;
+          break;
+        default:
+          break;
+      }
+      
+      setFilters(newFilters);
+    }
+  }, [location.search]);
+
   const products = [
     {
       id: 1,
       name: "Château Margaux 2018",
       category: "Vins",
       price: 95,
-      rating: 4.8,
-      reviews: 93,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
       stock: 15,
       isLimited: true,
@@ -39,8 +90,6 @@ const Catalog = () => {
       name: "Hennessy XO",
       category: "Liqueurs",
       price: 150,
-      rating: 4.9,
-      reviews: 85,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
       stock: 8,
       isLimited: true,
@@ -51,8 +100,6 @@ const Catalog = () => {
       name: "Heineken Pack 24",
       category: "Bières",
       price: 35,
-      rating: 4.5,
-      reviews: 120,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
       stock: 50,
       isNew: false,
@@ -63,8 +110,6 @@ const Catalog = () => {
       name: "Assortiment Chocolats Fins",
       category: "Sucreries",
       price: 30,
-      rating: 4.7,
-      reviews: 45,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
       stock: 20,
       isNew: false,
@@ -80,10 +125,62 @@ const Catalog = () => {
     navigate(`/product/${productId}`);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Update URL with search parameter
+    navigate(`/catalog?search=${searchQuery}`);
+  };
+
+  // Filter products based on search query and filters
+  const filteredProducts = products.filter(product => {
+    // Check search query
+    if (searchQuery && !product.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    
+    // Check category filters
+    if (
+      !(filters.vins && product.category === "Vins") &&
+      !(filters.liqueurs && product.category === "Liqueurs") &&
+      !(filters.boissons && product.category === "Boissons") &&
+      !(filters.sucreries && product.category === "Sucreries") &&
+      !(filters.bieres && product.category === "Bières")
+    ) {
+      return false;
+    }
+    
+    // Check other filters
+    if (filters.nouveautes && !product.isNew) return false;
+    if (filters.promotions && !product.isPromo) return false;
+    if (filters.stockLimite && !product.isLimited) return false;
+    
+    // Check price range
+    if (product.price < priceRange[0] || product.price > priceRange[1]) return false;
+    
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-8 text-gray-800">Catalogue Complet</h1>
+        
+        {/* Search Bar */}
+        <div className="mb-8">
+          <form onSubmit={handleSearch} className="flex items-center gap-2">
+            <Input
+              type="text"
+              placeholder="Rechercher un produit..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1"
+            />
+            <Button type="submit" className="bg-orange-600 hover:bg-orange-700">
+              <Search className="mr-2 h-4 w-4" />
+              Rechercher
+            </Button>
+          </form>
+        </div>
         
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
@@ -200,7 +297,7 @@ const Catalog = () => {
           {/* Product Grid */}
           <div className="lg:w-3/4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <div 
                   key={product.id} 
                   className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition cursor-pointer"
@@ -226,18 +323,6 @@ const Catalog = () => {
                   <div className="p-4">
                     <div className="text-sm text-gray-500 mb-1">{product.category}</div>
                     <h3 className="font-semibold text-gray-800 mb-2">{product.name}</h3>
-                    <div className="flex items-center mb-2">
-                      <div className="flex text-yellow-400">
-                        {Array(5).fill(0).map((_, i) => (
-                          <Star
-                            key={i}
-                            size={16}
-                            fill={i < Math.floor(product.rating) ? "currentColor" : "none"}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-500 ml-2">({product.reviews})</span>
-                    </div>
                     <div className="flex justify-between items-end">
                       <div>
                         <div className="text-orange-600 font-bold">{product.price} €</div>
@@ -257,6 +342,12 @@ const Catalog = () => {
                   </div>
                 </div>
               ))}
+              
+              {filteredProducts.length === 0 && (
+                <div className="col-span-full py-10 text-center">
+                  <p className="text-gray-600">Aucun produit ne correspond à vos critères de recherche.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

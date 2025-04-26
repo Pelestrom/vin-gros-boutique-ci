@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useShoppingCart } from '../contexts/ShoppingCartContext';
+import { Search } from 'lucide-react';
 
 interface NewsletterSubscriber {
   email: string;
@@ -9,10 +11,10 @@ interface NewsletterSubscriber {
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isPurchaseTypeWholesale, setIsPurchaseTypeWholesale] = useState(false);
   const [showNewsletterSuccess, setShowNewsletterSuccess] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([]);
+  const navigate = useNavigate();
 
   const { addToCart } = useShoppingCart();
 
@@ -26,13 +28,17 @@ const Index = () => {
     }
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate(`/catalog?search=${searchQuery}`);
+  };
+
   const featuredProducts = [
     {
       id: 1,
       name: 'Château Margaux 2018',
       category: 'Vins',
-      price: 120,
-      priceWholesale: 95,
+      price: 95,
       image: 'https://readdy.ai/api/search-image?query=Elegant%20bottle%20of%20red%20wine%20Chateau%20Margaux%20with%20deep%20burgundy%20color%20liquid%20inside%20clear%20glass%20bottle%20with%20black%20and%20gold%20label%20against%20soft%20neutral%20background%20professional%20product%20photography&width=400&height=500&seq=1&orientation=portrait',
       stock: 15,
       isLimited: true,
@@ -42,8 +48,7 @@ const Index = () => {
       id: 2,
       name: 'Hennessy XO',
       category: 'Liqueurs',
-      price: 180,
-      priceWholesale: 150,
+      price: 150,
       image: 'https://readdy.ai/api/search-image?query=Premium%20cognac%20Hennessy%20XO%20bottle%20with%20amber%20liquid%20and%20distinctive%20bottle%20shape%20against%20neutral%20elegant%20background%20professional%20product%20photography%20high%20resolution&width=400&height=500&seq=2&orientation=portrait',
       stock: 8,
       isLimited: true,
@@ -53,8 +58,7 @@ const Index = () => {
       id: 3,
       name: 'Dom Pérignon Vintage',
       category: 'Vins',
-      price: 210,
-      priceWholesale: 175,
+      price: 175,
       image: 'https://readdy.ai/api/search-image?query=Luxury%20champagne%20Dom%20Perignon%20bottle%20with%20elegant%20shape%20and%20distinctive%20label%20against%20soft%20neutral%20background%20with%20subtle%20lighting%20professional%20product%20photography&width=400&height=500&seq=3&orientation=portrait',
       stock: 20,
       isNew: true,
@@ -63,8 +67,7 @@ const Index = () => {
       id: 4,
       name: 'Assortiment Chocolats Fins',
       category: 'Sucreries',
-      price: 45,
-      priceWholesale: 35,
+      price: 35,
       image: 'https://readdy.ai/api/search-image?query=Luxury%20chocolate%20assortment%20box%20with%20various%20pralines%20and%20truffles%20elegantly%20arranged%20against%20soft%20neutral%20background%20professional%20food%20photography&width=400&height=500&seq=4&orientation=portrait',
       stock: 30,
       isPromo: true,
@@ -93,8 +96,20 @@ const Index = () => {
     {
       id: 4,
       name: 'Eaux Minérales',
-      image: 'https://readdy.ai/api/search-image?query=Luxury%20confectionery%20assortment%20with%20chocolates%20candies%20and%20sweets%20elegantly%20arranged%20against%20soft%20neutral%20background%20professional%20food%20photography&width=300&height=200&seq=8&orientation=landscape',
+      image: 'https://readdy.ai/api/search-image?query=Collection%20of%20mineral%20water%20bottles%20in%20different%20shapes%20and%20sizes%20arranged%20on%20neutral%20background%20with%20clear%20refreshing%20appearance%20professional%20product%20photography&width=300&height=200&seq=8&orientation=landscape',
       count: 60,
+    },
+    {
+      id: 5,
+      name: 'Bières',
+      image: 'https://readdy.ai/api/search-image?query=Collection%20of%20beer%20bottles%20and%20cans%20of%20various%20brands%20arranged%20on%20neutral%20background%20with%20amber%20color%20liquid%20professional%20product%20photography&width=300&height=200&seq=9&orientation=landscape',
+      count: 75,
+    },
+    {
+      id: 6,
+      name: 'Sucreries',
+      image: 'https://readdy.ai/api/search-image?query=Luxury%20confectionery%20assortment%20with%20chocolates%20candies%20and%20sweets%20elegantly%20arranged%20against%20soft%20neutral%20background%20professional%20food%20photography&width=300&height=200&seq=10&orientation=landscape',
+      count: 40,
     },
   ];
 
@@ -105,18 +120,18 @@ const Index = () => {
           <div className="container mx-auto px-4 h-full flex items-center">
             <div className="max-w-lg text-white">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Découvrez Notre Collection Exclusive</h1>
-              <p className="text-lg mb-6">Vins de prestige, liqueurs raffinées, boissons sélectionnées, sucreries délicates et eaux minérales pour vos moments spéciaux.</p>
+              <p className="text-lg mb-6">Vins de prestige, liqueurs raffinées, boissons sélectionnées, bières premium et sucreries délicates pour vos moments spéciaux.</p>
               <div className="flex space-x-4">
-                <a href="/catalog">
+                <Link to="/catalog">
                   <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold transition !rounded-button whitespace-nowrap cursor-pointer">
                     Explorer le Catalogue
                   </button>
-                </a>
-                <a href="/promotions">
+                </Link>
+                <Link to="/promotions">
                   <button className="bg-transparent border-2 border-white hover:bg-white/10 text-white px-6 py-3 rounded-lg font-semibold transition !rounded-button whitespace-nowrap cursor-pointer">
                     Nos Promotions
                   </button>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -126,7 +141,7 @@ const Index = () => {
       {/* Search Bar */}
       <div className="container mx-auto px-4 -mt-7 relative z-10">
         <div className="bg-white rounded-xl shadow-lg p-4 flex items-center">
-          <div className="flex-1 flex items-center border border-gray-300 rounded-lg overflow-hidden">
+          <form onSubmit={handleSearch} className="flex-1 flex items-center border border-gray-300 rounded-lg overflow-hidden">
             <input
               type="text"
               placeholder="Rechercher des produits..."
@@ -134,35 +149,34 @@ const Index = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 transition !rounded-button whitespace-nowrap cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
+            <button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 transition !rounded-button whitespace-nowrap cursor-pointer">
+              <Search className="h-5 w-5 mr-2 inline" />
               Rechercher
             </button>
-          </div>
+          </form>
         </div>
       </div>
       
       {/* Categories */}
       <section className="container mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Catégories Populaires</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map(category => (
-            <div key={category.id} className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition cursor-pointer">
-              <div className="h-48 overflow-hidden">
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300"
-                />
+            <Link key={category.id} to={`/catalog?category=${category.name}`}>
+              <div className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-lg transition cursor-pointer">
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-gray-800">{category.name}</h3>
+                  <p className="text-gray-600">{category.count} produits</p>
+                </div>
               </div>
-              <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-800">{category.name}</h3>
-                <p className="text-gray-600">{category.count} produits</p>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -171,65 +185,54 @@ const Index = () => {
       <section className="container mx-auto px-4 py-12 bg-gray-50">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">Produits en Vedette</h2>
-          <a href="/catalog" className="text-orange-600 hover:text-orange-700 font-medium flex items-center cursor-pointer">
+          <Link to="/catalog" className="text-orange-600 hover:text-orange-700 font-medium flex items-center cursor-pointer">
             Voir tout 
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
-          </a>
+          </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {featuredProducts.map(product => (
-            <div key={product.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer">
-              <div className="relative h-64 overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover object-top"
-                />
-                {product.isNew && (
-                  <div className="absolute top-3 left-3 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
-                    NOUVEAU
-                  </div>
-                )}
-                {product.isPromo && (
-                  <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                    PROMO
-                  </div>
-                )}
-                {product.isLimited && (
-                  <div className="absolute bottom-3 left-3 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="8" x2="12" y2="12"></line>
-                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                    Stock limité: {product.stock}
-                  </div>
-                )}
-              </div>
-              <div className="p-4">
-                <div className="text-xs text-gray-500 mb-1">{product.category}</div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
-                <div className="flex justify-between items-end">
-                  <div>
+            <Link key={product.id} to={`/product/${product.id}`}>
+              <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer">
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover object-top"
+                  />
+                  {product.isNew && (
+                    <div className="absolute top-3 left-3 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
+                      NOUVEAU
+                    </div>
+                  )}
+                  {product.isPromo && (
+                    <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                      PROMO
+                    </div>
+                  )}
+                  {product.isLimited && (
+                    <div className="absolute bottom-3 left-3 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                      Stock limité: {product.stock}
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <div className="text-xs text-gray-500 mb-1">{product.category}</div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
+                  <div className="flex justify-between items-end">
                     <div className="text-orange-600 font-bold">{product.price} €</div>
-                    <div className="text-gray-500 text-sm">Gros: {product.priceWholesale} €</div>
                   </div>
-                  <button
-                    className="bg-orange-600 hover:bg-orange-700 text-white p-2 rounded-full transition !rounded-button whitespace-nowrap cursor-pointer"
-                    onClick={() => addToCart({...product, quantity: 1})}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="9" cy="21" r="1"></circle>
-                      <circle cx="20" cy="21" r="1"></circle>
-                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                  </button>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

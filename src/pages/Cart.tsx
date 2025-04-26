@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, ShoppingBag, Truck, Plus, Minus } from 'lucide-react';
+import { Trash2, ShoppingBag, Truck, Plus, Minus, WhatsApp } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -70,8 +70,8 @@ const Cart: React.FC = () => {
     // Encoder le message pour URL WhatsApp
     const encodedMessage = encodeURIComponent(message);
     
-    // Numéro WhatsApp du gérant (à remplacer par le vrai numéro)
-    const phoneNumber = "22507070707"; // Format: code pays sans + et numéro
+    // Numéro WhatsApp du gérant
+    const phoneNumber = "0140087183"; // Numéro spécifié
     
     // Créer le lien WhatsApp
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
@@ -279,8 +279,9 @@ const Cart: React.FC = () => {
             
             <Button 
               onClick={handleCheckout}
-              className="w-full py-6 bg-orange-600 hover:bg-orange-700 text-lg font-medium"
+              className="w-full py-6 bg-orange-600 hover:bg-orange-700 text-lg font-medium flex items-center justify-center"
             >
+              <WhatsApp className="mr-2" size={20} />
               Valider ma commande
             </Button>
             
