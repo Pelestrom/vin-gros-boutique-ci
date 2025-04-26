@@ -2,16 +2,18 @@
 import React from 'react';
 import { ShoppingCart, Percent } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
 
 const Promotions = () => {
+  const navigate = useNavigate();
+  
   const promotions = [
     {
       id: 1,
       name: "Château Margaux 2018",
       category: "Vins",
       originalPrice: 150,
-      discountedPrice: 120,
-      wholesalePrice: 95,
+      discountedPrice: 95,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
       discount: 20,
       endDate: "2025-05-01",
@@ -22,12 +24,33 @@ const Promotions = () => {
       name: "Hennessy XO",
       category: "Liqueurs",
       originalPrice: 220,
-      discountedPrice: 180,
-      wholesalePrice: 150,
+      discountedPrice: 150,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
       discount: 18,
       endDate: "2025-05-01",
       stock: 8
+    },
+    {
+      id: 3,
+      name: "Corona Extra Pack",
+      category: "Bières",
+      originalPrice: 45,
+      discountedPrice: 35,
+      image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
+      discount: 22,
+      endDate: "2025-05-15",
+      stock: 25
+    },
+    {
+      id: 4,
+      name: "Chocolats Assortis",
+      category: "Sucreries",
+      originalPrice: 40,
+      discountedPrice: 30,
+      image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
+      discount: 25,
+      endDate: "2025-04-30",
+      stock: 10
     }
   ];
 
@@ -36,6 +59,10 @@ const Promotions = () => {
     const today = new Date();
     const diffTime = end.getTime() - today.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const handleProductClick = (productId: number) => {
+    navigate(`/product/${productId}`);
   };
 
   return (
@@ -57,9 +84,13 @@ const Promotions = () => {
         </div>
 
         {/* Promotions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {promotions.map((promo) => (
-            <div key={promo.id} className="bg-white rounded-xl shadow-sm overflow-hidden group">
+            <div 
+              key={promo.id} 
+              className="bg-white rounded-xl shadow-sm overflow-hidden group cursor-pointer"
+              onClick={() => handleProductClick(promo.id)}
+            >
               <div className="relative h-48">
                 <img
                   src={promo.image}
@@ -82,9 +113,6 @@ const Promotions = () => {
                       {promo.originalPrice} €
                     </span>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    Prix en gros: {promo.wholesalePrice} €
-                  </div>
                 </div>
                 <div className="flex justify-between items-center mb-4">
                   <div className="text-sm text-gray-600">
@@ -96,9 +124,15 @@ const Promotions = () => {
                     Stock: {promo.stock} unités
                   </div>
                 </div>
-                <Button className="w-full bg-orange-600 hover:bg-orange-700">
+                <Button 
+                  className="w-full bg-orange-600 hover:bg-orange-700"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleProductClick(promo.id);
+                  }}
+                >
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  Ajouter au panier
+                  Voir le produit
                 </Button>
               </div>
             </div>

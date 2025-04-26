@@ -11,6 +11,8 @@ import Footer from "./components/navigation/Footer";
 import Index from "./pages/Index";
 import Catalog from "./pages/Catalog";
 import Promotions from "./pages/Promotions";
+import ProductDetail from "./pages/ProductDetail";
+import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/catalog" element={<Catalog />} />
                   <Route path="/promotions" element={<Promotions />} />
+                  <Route path="/product/:productId" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>

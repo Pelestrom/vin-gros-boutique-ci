@@ -8,12 +8,14 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 
 const Catalog = () => {
+  const navigate = useNavigate();
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [filters, setFilters] = useState({
     vins: true,
     liqueurs: true,
     boissons: true,
     sucreries: true,
+    bieres: true,
     nouveautes: false,
     promotions: false,
     stockLimite: false
@@ -24,8 +26,7 @@ const Catalog = () => {
       id: 1,
       name: "Château Margaux 2018",
       category: "Vins",
-      price: 120,
-      priceWholesale: 95,
+      price: 95,
       rating: 4.8,
       reviews: 93,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
@@ -37,19 +38,46 @@ const Catalog = () => {
       id: 2,
       name: "Hennessy XO",
       category: "Liqueurs",
-      price: 180,
-      priceWholesale: 150,
+      price: 150,
       rating: 4.9,
       reviews: 85,
       image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
       stock: 8,
       isLimited: true,
       isPromo: true
+    },
+    {
+      id: 3,
+      name: "Heineken Pack 24",
+      category: "Bières",
+      price: 35,
+      rating: 4.5,
+      reviews: 120,
+      image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
+      stock: 50,
+      isNew: false,
+      isPromo: false
+    },
+    {
+      id: 4,
+      name: "Assortiment Chocolats Fins",
+      category: "Sucreries",
+      price: 30,
+      rating: 4.7,
+      reviews: 45,
+      image: "/lovable-uploads/3112be4c-c1f6-41f4-8eea-ea9ebc741373.png",
+      stock: 20,
+      isNew: false,
+      isPromo: true
     }
   ];
 
   const handleFilterChange = (key: string) => {
     setFilters(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }));
+  };
+
+  const handleProductClick = (productId: number) => {
+    navigate(`/product/${productId}`);
   };
 
   return (
@@ -98,6 +126,14 @@ const Catalog = () => {
                         id="sucreries"
                       />
                       <label htmlFor="sucreries" className="ml-2">Sucreries</label>
+                    </div>
+                    <div className="flex items-center">
+                      <Checkbox 
+                        checked={filters.bieres} 
+                        onCheckedChange={() => handleFilterChange('bieres')}
+                        id="bieres"
+                      />
+                      <label htmlFor="bieres" className="ml-2">Bières</label>
                     </div>
                   </div>
                 </div>
@@ -165,7 +201,11 @@ const Catalog = () => {
           <div className="lg:w-3/4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product) => (
-                <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+                <div 
+                  key={product.id} 
+                  className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition cursor-pointer"
+                  onClick={() => handleProductClick(product.id)}
+                >
                   <div className="relative h-48">
                     <img
                       src={product.image}
@@ -201,12 +241,15 @@ const Catalog = () => {
                     <div className="flex justify-between items-end">
                       <div>
                         <div className="text-orange-600 font-bold">{product.price} €</div>
-                        <div className="text-sm text-gray-500">Gros: {product.priceWholesale} €</div>
                       </div>
                       <Button 
                         variant="default"
                         size="icon"
                         className="bg-orange-600 hover:bg-orange-700"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProductClick(product.id);
+                        }}
                       >
                         <ShoppingCart className="h-4 w-4" />
                       </Button>

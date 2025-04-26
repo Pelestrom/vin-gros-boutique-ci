@@ -15,6 +15,7 @@ type ShoppingCartContextType = {
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
+  clearCart: () => void;
 };
 
 const ShoppingCartContext = createContext<ShoppingCartContextType>({
@@ -23,6 +24,7 @@ const ShoppingCartContext = createContext<ShoppingCartContextType>({
   addToCart: () => {},
   removeFromCart: () => {},
   updateQuantity: () => {},
+  clearCart: () => {},
 });
 
 export const ShoppingCartProvider = ({ children }: { children: React.ReactNode }) => {
@@ -35,10 +37,10 @@ export const ShoppingCartProvider = ({ children }: { children: React.ReactNode }
       const existingItem = prev.find(i => i.id === item.id);
       if (existingItem) {
         return prev.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
         );
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, item];
     });
   };
 
@@ -55,6 +57,10 @@ export const ShoppingCartProvider = ({ children }: { children: React.ReactNode }
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <ShoppingCartContext.Provider 
       value={{ 
@@ -62,7 +68,8 @@ export const ShoppingCartProvider = ({ children }: { children: React.ReactNode }
         cartCount, 
         addToCart, 
         removeFromCart, 
-        updateQuantity 
+        updateQuantity,
+        clearCart
       }}
     >
       {children}

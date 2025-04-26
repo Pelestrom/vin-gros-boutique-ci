@@ -1,16 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useShoppingCart } from '../../contexts/ShoppingCartContext';
-import { useAuth } from '../../contexts/AuthContext';
-import CartDropdown from './CartDropdown';
-import { ShoppingCart, Menu, X, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { WineIcon } from '../icons/WineIcon';
 
 const Header: React.FC = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showCart, setShowCart] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   const { cartCount } = useShoppingCart();
   const location = useLocation();
@@ -28,6 +26,10 @@ const Header: React.FC = () => {
     setShowMobileMenu(false);
   }, [location]);
 
+  const handleCartClick = () => {
+    navigate('/cart');
+  };
+
   return (
     <header
       className={`sticky top-0 z-30 transition-all duration-300 ${
@@ -42,7 +44,7 @@ const Header: React.FC = () => {
             <Link to="/" className="flex items-center mr-4">
               <div style={{ fontSize: '1.125rem' }} className={`${isScrolled ? 'text-orange-600' : 'text-white'}`}>
                 <div className="flex items-center">
-                  <WineIcon className={`mr-2 h-7 w-7 ${isScrolled ? 'text-orange-600' : 'text-white'}`} />
+                  <img src="/lovable-uploads/ee41d353-203c-425f-9955-90c80b882de5.png" alt="DDS-CI Logo" className="mr-2 h-12 w-auto" />
                   DDS-CI DISTRIBUTION
                 </div>
               </div>
@@ -85,7 +87,7 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-4">
             <div
               className="relative cursor-pointer"
-              onClick={() => setShowCart(!showCart)}
+              onClick={handleCartClick}
             >
               <ShoppingCart size={20} className={isScrolled ? 'text-gray-700' : 'text-white'} />
               {cartCount > 0 && (
@@ -93,7 +95,6 @@ const Header: React.FC = () => {
                   {cartCount}
                 </span>
               )}
-              {showCart && <CartDropdown onClose={() => setShowCart(false)} />}
             </div>
 
             <button
